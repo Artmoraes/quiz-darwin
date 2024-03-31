@@ -8,7 +8,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ title = "", icon }) => {
   return (
-    <header className="flex justify-between items-center py-4 px-6 bg-gray-800 text-white">
+    <header className="flex justify-between items-center py-4 px-6">
       <div className="flex items-center">
         {icon && (
           <div className="mr-4 flex flex-wrap content-center justify-center h-screen" style={{ width: "56px", height: "56px", backgroundColor: "#F6E7FF" }}>

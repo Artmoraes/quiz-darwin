@@ -1,19 +1,18 @@
-import Header from "./components/header/header";
-import { faPerson } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "./index.css";
+import React from "react";
+import Body from "./components/body/body";
+import Quiz from "./components/quiz/quiz";
+import { Route, Routes } from "react-router-dom";
 
-function App() {
+const App: React.FC = () => {
   return (
-    <>
-      <Header
-        title="Accessibility"
-        icon={<FontAwesomeIcon icon={faPerson} size="2xl" color="#000000"/>}
-      />
-      <main className="py-10">
-      </main>
-    </>
+    <Routes>
+      <Route path="/" element={<Body />} />
+      <Route path="/html" element={<Quiz subject="HTML" />} />
+      <Route path="/css" element={<Quiz subject="CSS" />} />
+      <Route path="/javascript" element={<Quiz subject="JavaScript" />} />
+      <Route path="/accessibility" element={<Quiz subject="Accessibility" />} />
+    </Routes>
   );
-}
+};
 
 export default App;
