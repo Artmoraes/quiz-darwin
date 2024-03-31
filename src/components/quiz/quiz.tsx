@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCss3, faHtml5, faJs } from "@fortawesome/free-brands-svg-icons";
 import data from "./data.json";
-import { faPerson } from "@fortawesome/free-solid-svg-icons";
 import Question from "../question/question";
+import Result from "../result/result";
+import Header from "../header/header";
 
 interface Quiz {
   title: string;
@@ -15,22 +14,12 @@ interface Quiz {
   }[];
 }
 
-interface Icones {
-  [key: string]: typeof faHtml5;
-}
-
-const icon: Icones = {
-  HTML: faHtml5,
-  CSS: faCss3,
-  JavaScript: faJs,
-  Accessibility: faPerson,
-};
-
 const Quiz: React.FC<{ subject: string }> = ({ subject }) => {
   const [currentQuiz, setCurrentQuiz] = useState<Quiz | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [showNextButton, setShowNextButton] = useState<boolean>(false);
+  const [score, setScore] = useState<number>(0);
 
   const loadQuiz = () => {
     const selectedQuiz = data.quizzes.find((quiz) => quiz.title === subject);
@@ -49,6 +38,11 @@ const Quiz: React.FC<{ subject: string }> = ({ subject }) => {
   };
 
   const handleNextQuestion = () => {
+    if (
+      selectedOption === currentQuiz?.questions[currentQuestionIndex].answer
+    ) {
+      setScore(score + 1);
+    }
     setSelectedOption(null);
     setShowNextButton(false);
     setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -56,12 +50,10 @@ const Quiz: React.FC<{ subject: string }> = ({ subject }) => {
 
   return (
     <div className="mt-8">
-      {currentQuiz && currentQuiz.questions.length > currentQuestionIndex && (
+      {currentQuiz && currentQuiz.questions.length > currentQuestionIndex ? (
         <div className="mt-4">
-          <h2 className="text-2xl font-bold">{currentQuiz.title}</h2>
           <div className="flex items-center mt-2">
-            <FontAwesomeIcon icon={icon[subject]} size="2x" color="#E34F26" />
-            <span className="ml-2">{currentQuiz.title}</span>
+            <Header title={subject} icon={subject} />
           </div>
           <p className="mt-4">
             {currentQuiz.questions[currentQuestionIndex].question}
@@ -81,6 +73,16 @@ const Quiz: React.FC<{ subject: string }> = ({ subject }) => {
             Próxima Questão
           </button>
         </div>
+      ) : (
+        <Result
+          score={score || 0}
+          totalQuestions={currentQuiz?.questions.length || 0}
+          subject={subject}
+          onPlayAgain={() => {
+            setCurrentQuestionIndex(0);
+            setScore(0);
+          }}
+        />
       )}
     </div>
   );
