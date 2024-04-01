@@ -88,18 +88,17 @@ const Quiz: React.FC<{ subject: string }> = ({ subject }) => {
   };
 
   const handleCheckQuestion = () => {
-    console.log("errorAndCorrect.correct ", errorAndCorrect);
     if (
       selectedOption === currentQuiz?.questions[currentQuestionIndex].answer
     ) {
       setScore(score + 1);
       setAnsweredCorrectly(true);
-      inputRefs.current[String(errorAndCorrect.correct)].classList.add("correct");
+      inputRefs.current[Number(errorAndCorrect.correct)].classList.add("correct");
     } else {
       setAnsweredCorrectly(false);
-      inputRefs.current[String(errorAndCorrect.correct)].classList.add("correct");
+      inputRefs.current[Number(errorAndCorrect.correct)].classList.add("correct");
 
-      inputRefs.current[String(errorAndCorrect.error)].classList.add("incorrect");
+      inputRefs.current[Number(errorAndCorrect.error)].classList.add("incorrect");
     }
     if (errorAndCorrect.error) {
     } else if (errorAndCorrect.correct) {
@@ -114,10 +113,10 @@ const Quiz: React.FC<{ subject: string }> = ({ subject }) => {
     setCurrentQuestionIndex(currentQuestionIndex + 1);
     setRadioDisabled(false);
     if (errorAndCorrect.correct !== "") {
-      inputRefs.current[String(errorAndCorrect.correct)].classList.remove("correct");
+      inputRefs.current[Number(errorAndCorrect.correct)].classList.remove("correct");
     }
     if (errorAndCorrect.error !== "") {
-      inputRefs.current[String(errorAndCorrect.error)].classList.remove("incorrect");
+      inputRefs.current[Number(errorAndCorrect.error)].classList.remove("incorrect");
     }
     setErrorAndCorrect({ error: "", correct: "" });
   };

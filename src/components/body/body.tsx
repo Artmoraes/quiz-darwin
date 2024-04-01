@@ -1,7 +1,9 @@
 import React from "react";
 import Header from "../header/header";
+import { useNavigate } from "react-router-dom";
 
 const Body: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <>
       <Header />
@@ -15,16 +17,24 @@ const Body: React.FC = () => {
           </p>
         </div>
         <div className="mt-4 md:mt-0 flex flex-col md:flex-row">
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none mb-2 md:mb-0 md:mr-2">
+          <button 
+          onClick={() => navigate('/html')}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none mb-2 md:mb-0 md:mr-2">
             HTML
           </button>
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none mb-2 md:mb-0 md:mr-2">
+          <button 
+          onClick={() => navigate('/css')}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none mb-2 md:mb-0 md:mr-2">
             CSS
           </button>
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none mb-2 md:mb-0 md:mr-2">
+          <button 
+          onClick={() => navigate('/javascript')}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none mb-2 md:mb-0 md:mr-2">
             JavaScript
           </button>
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none">
+          <button 
+          onClick={() => navigate('/accessibility')}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none">
             Accessibility
           </button>
         </div>
