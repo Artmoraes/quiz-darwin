@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import data from "./data.json";
 import Question from "../question/question";
 import Result from "../result/result";
 import Header from "../header/header";
+import "./quizz.css";
 
 interface Quiz {
   title: string;
@@ -14,12 +15,30 @@ interface Quiz {
   }[];
 }
 
+interface ErrorAndCorrect {
+  error: string | number,
+  correct: string | number,
+}
+
+interface CorrectAnswer {
+  id: number;
+  option: string;
+}
+
 const Quiz: React.FC<{ subject: string }> = ({ subject }) => {
   const [currentQuiz, setCurrentQuiz] = useState<Quiz | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [showNextButton, setShowNextButton] = useState<boolean>(false);
   const [score, setScore] = useState<number>(0);
+  const [answeredCorrectly, setAnsweredCorrectly] = useState<boolean>(false);
+  const [radioDisabled, setRadioDisabled] = useState<boolean>(false);
+  const [errorAndCorrect, setErrorAndCorrect] = useState<ErrorAndCorrect>({
+    error: "",
+    correct: "",
+  });
+  const inputRefs = useRef<HTMLInputElement[]>([]);
+
 
   const loadQuiz = () => {
     const selectedQuiz = data.quizzes.find((quiz) => quiz.title === subject);
@@ -32,20 +51,75 @@ const Quiz: React.FC<{ subject: string }> = ({ subject }) => {
     loadQuiz();
   }, []);
 
-  const handleOptionSelect = (option: string) => {
-    setSelectedOption(option);
-    setShowNextButton(true);
+  const handleToggleColor = (index: number) => {
+    console.log("index handleToggleColor", index);
+    
   };
 
-  const handleNextQuestion = () => {
+  const handleOptionSelect = (
+    option: string,
+    index: number,
+    correctAnswer: CorrectAnswer
+  ) => {
+    setSelectedOption(option);
+    setErrorAndCorrect({ error: index, correct: correctAnswer.id });
+  };
+
+  const managerButtons = () => {
+    if (showNextButton) {
+      return (
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none mt-4"
+          onClick={handleNextQuestion}
+        >
+          Próxima Questão
+        </button>
+      );
+    } else {
+      return (
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none mt-4"
+          onClick={handleCheckQuestion}
+        >
+          Enviar Resposta
+        </button>
+      );
+    }
+  };
+
+  const handleCheckQuestion = () => {
+    console.log("errorAndCorrect.correct ", errorAndCorrect);
     if (
       selectedOption === currentQuiz?.questions[currentQuestionIndex].answer
     ) {
       setScore(score + 1);
+      setAnsweredCorrectly(true);
+      inputRefs.current[String(errorAndCorrect.correct)].classList.add("correct");
+    } else {
+      setAnsweredCorrectly(false);
+      inputRefs.current[String(errorAndCorrect.correct)].classList.add("correct");
+
+      inputRefs.current[String(errorAndCorrect.error)].classList.add("incorrect");
     }
-    setSelectedOption(null);
+    if (errorAndCorrect.error) {
+    } else if (errorAndCorrect.correct) {
+    }
+    setRadioDisabled(true);
+    setShowNextButton(true);
+  };
+
+  const handleNextQuestion = () => {
     setShowNextButton(false);
+    setSelectedOption(null);
     setCurrentQuestionIndex(currentQuestionIndex + 1);
+    setRadioDisabled(false);
+    if (errorAndCorrect.correct !== "") {
+      inputRefs.current[String(errorAndCorrect.correct)].classList.remove("correct");
+    }
+    if (errorAndCorrect.error !== "") {
+      inputRefs.current[String(errorAndCorrect.error)].classList.remove("incorrect");
+    }
+    setErrorAndCorrect({ error: "", correct: "" });
   };
 
   return (
@@ -60,18 +134,14 @@ const Quiz: React.FC<{ subject: string }> = ({ subject }) => {
           </p>
           <Question
             options={currentQuiz.questions[currentQuestionIndex].options}
+            correctAnswer={currentQuiz.questions[currentQuestionIndex].answer}
             selectedOption={selectedOption}
+            radioDisabled={radioDisabled}
+            inputRefs={inputRefs}
             handleOptionSelect={handleOptionSelect}
+            handleToggleColor={handleToggleColor}
           />
-          <button
-            className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none mt-4 ${
-              !showNextButton && "opacity-50 cursor-not-allowed"
-            }`}
-            onClick={handleNextQuestion}
-            disabled={!showNextButton}
-          >
-            Próxima Questão
-          </button>
+          {managerButtons()}
         </div>
       ) : (
         <Result
