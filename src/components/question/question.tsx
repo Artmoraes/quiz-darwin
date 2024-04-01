@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
 
+interface CorrectAnswer {
+  id: number;
+  option: string;
+}
+
 interface Props {
   options: string[];
   selectedOption: string | null;
@@ -9,9 +14,8 @@ interface Props {
   handleOptionSelect: (
     option: string,
     index: number,
-    correctAnswer: object
+    correctAnswer: CorrectAnswer
   ) => void;
-  handleToggleColor: (index: number) => void;
 }
 
 const Question: React.FC<Props> = ({
@@ -21,20 +25,14 @@ const Question: React.FC<Props> = ({
   handleOptionSelect,
   radioDisabled,
   inputRefs,
-  handleToggleColor,
 }) => {
-  const [correctAnswerObject, setCorrectAnswerObject] = useState<{
-    id: number;
-    answer: string;
-  } | null>(null);
+  const [correctAnswerObject, setCorrectAnswerObject] = useState<CorrectAnswer | null>(null);
 
   useEffect(() => {
-    options.forEach((option, index) => {
-      if (option === correctAnswer) {
-        setCorrectAnswerObject({ id: index, answer: option });
-        return;
-      }
-    });
+    const correctIndex = options.findIndex(option => option === correctAnswer);
+    if (correctIndex !== -1) {
+      setCorrectAnswerObject({ id: correctIndex, option: correctAnswer });
+    }
   }, [correctAnswer, options]);
 
   useEffect(() => {
@@ -46,7 +44,16 @@ const Question: React.FC<Props> = ({
   return (
     <ul className="mt-2">
       {options.map((option, index) => (
-        <li key={index} className="mb-2">
+        <li
+          key={index}
+          className="mb-2"
+          id={String(index)}
+          ref={(el) => {
+            if (inputRefs.current) {
+              inputRefs.current[index] = el;
+            }
+          }}
+        >
           <label className="inline-flex items-center">
             <input
               type="radio"
@@ -58,22 +65,11 @@ const Question: React.FC<Props> = ({
                 handleOptionSelect(
                   option,
                   index,
-                  correctAnswerObject || { id: -1, answer: "" }
+                  correctAnswerObject || { id: -1, option: "" }
                 )
               }
-              onClick={() => handleToggleColor(index)}
             />
-            <span
-              className="ml-2"
-              id={String(index)}
-              ref={(el) => {
-                if (inputRefs.current) {
-                  inputRefs.current[index] = el;
-                }
-              }}
-            >
-              {option}
-            </span>
+            <span className="ml-2">{option}</span>
           </label>
         </li>
       ))}

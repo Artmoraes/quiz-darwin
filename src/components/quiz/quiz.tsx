@@ -4,6 +4,9 @@ import Question from "../question/question";
 import Result from "../result/result";
 import Header from "../header/header";
 import "./quizz.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheckCircle, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+import { createRoot } from "react-dom/client";
 
 interface Quiz {
   title: string;
@@ -31,13 +34,14 @@ const Quiz: React.FC<{ subject: string }> = ({ subject }) => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [showNextButton, setShowNextButton] = useState<boolean>(false);
   const [score, setScore] = useState<number>(0);
-  const [answeredCorrectly, setAnsweredCorrectly] = useState<boolean>(false);
   const [radioDisabled, setRadioDisabled] = useState<boolean>(false);
   const [errorAndCorrect, setErrorAndCorrect] = useState<ErrorAndCorrect>({
     error: "",
     correct: "",
   });
   const inputRefs = useRef<HTMLInputElement[]>([]);
+  const [elementCorrect, setElementCorrect] = useState<HTMLElement | null>(null);
+  const [elementWrong, setElementWrong] = useState<HTMLElement | null>(null);
 
 
   const loadQuiz = () => {
@@ -51,10 +55,6 @@ const Quiz: React.FC<{ subject: string }> = ({ subject }) => {
     loadQuiz();
   }, []);
 
-  const handleToggleColor = (index: number) => {
-    console.log("index handleToggleColor", index);
-    
-  };
 
   const handleOptionSelect = (
     option: string,
@@ -80,6 +80,7 @@ const Quiz: React.FC<{ subject: string }> = ({ subject }) => {
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none mt-4"
           onClick={handleCheckQuestion}
+          disabled={!selectedOption}
         >
           Enviar Resposta
         </button>
@@ -87,21 +88,35 @@ const Quiz: React.FC<{ subject: string }> = ({ subject }) => {
     }
   };
 
-  const handleCheckQuestion = () => {
-    if (
-      selectedOption === currentQuiz?.questions[currentQuestionIndex].answer
-    ) {
-      setScore(score + 1);
-      setAnsweredCorrectly(true);
-      inputRefs.current[Number(errorAndCorrect.correct)].classList.add("correct");
-    } else {
-      setAnsweredCorrectly(false);
-      inputRefs.current[Number(errorAndCorrect.correct)].classList.add("correct");
+  const createIconToQuestion = (icon: typeof faCheckCircle) => {
+    const iconElement = document.createElement('span');
+    iconElement.classList.add('ml-2');
+    createRoot(iconElement).render(<FontAwesomeIcon icon={icon} />);
+    return iconElement;
+  };
 
-      inputRefs.current[Number(errorAndCorrect.error)].classList.add("incorrect");
-    }
-    if (errorAndCorrect.error) {
-    } else if (errorAndCorrect.correct) {
+  const handleCheckQuestion = () => {
+    const correctOptionIndex = Number(errorAndCorrect.correct);
+    const errorOptionIndex = Number(errorAndCorrect.error);
+
+    if (selectedOption === currentQuiz?.questions[currentQuestionIndex].answer) {
+      setScore(score + 1);
+      inputRefs.current[correctOptionIndex].classList.add("correct");
+
+      const iconElement = createIconToQuestion(faCheckCircle);
+      inputRefs.current[correctOptionIndex].appendChild(iconElement);
+      setElementCorrect(iconElement);
+    } else {
+      inputRefs.current[correctOptionIndex].classList.add("correct");
+      inputRefs.current[errorOptionIndex].classList.add("incorrect");
+
+      const correctIconElement = createIconToQuestion(faCheckCircle);
+      inputRefs.current[correctOptionIndex].appendChild(correctIconElement);
+      setElementCorrect(correctIconElement);
+
+      const errorIconElement = createIconToQuestion(faTimesCircle);
+      inputRefs.current[errorOptionIndex].appendChild(errorIconElement);
+      setElementWrong(errorIconElement);
     }
     setRadioDisabled(true);
     setShowNextButton(true);
@@ -112,12 +127,14 @@ const Quiz: React.FC<{ subject: string }> = ({ subject }) => {
     setSelectedOption(null);
     setCurrentQuestionIndex(currentQuestionIndex + 1);
     setRadioDisabled(false);
-    if (errorAndCorrect.correct !== "") {
-      inputRefs.current[Number(errorAndCorrect.correct)].classList.remove("correct");
-    }
-    if (errorAndCorrect.error !== "") {
-      inputRefs.current[Number(errorAndCorrect.error)].classList.remove("incorrect");
-    }
+    
+    const correctOptionIndex = Number(errorAndCorrect.correct);
+    const errorOptionIndex = Number(errorAndCorrect.error);
+
+    errorAndCorrect.correct !== "" && inputRefs.current[correctOptionIndex].classList.remove("correct");
+    errorAndCorrect.error !== "" && inputRefs.current[errorOptionIndex].classList.remove("incorrect");
+    elementCorrect && elementCorrect.remove();
+    elementWrong && elementWrong.remove();
     setErrorAndCorrect({ error: "", correct: "" });
   };
 
@@ -138,7 +155,6 @@ const Quiz: React.FC<{ subject: string }> = ({ subject }) => {
             radioDisabled={radioDisabled}
             inputRefs={inputRefs}
             handleOptionSelect={handleOptionSelect}
-            handleToggleColor={handleToggleColor}
           />
           {managerButtons()}
         </div>
