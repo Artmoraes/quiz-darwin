@@ -14,7 +14,7 @@ const SwitchButton: React.FC = () => {
   return (
     <div className="flex items-center">
       <div className="flex mx-1">
-        <Icons nameIcon={"Sun"} color={"#626C7F"} size="lg" />
+        <Icons nameIcon={"Sunny"} />
       </div>
       <div className="onoffswitch">
         <input
