@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import "./switchButton.css";
+import Icons from "../icons/icons";
 
 const SwitchButton: React.FC = () => {
-  const [selectedOption, setSelectedOption] = useState<string>("");
+  const [selectedOption, setSelectedOption] = useState<string>("option1");
 
   const handleToggleOption = () => {
     setSelectedOption((prevOption) =>
@@ -10,28 +12,25 @@ const SwitchButton: React.FC = () => {
   };
 
   return (
-    <div className="relative flex items-center mt-3">
-      <button
-        className={`${
-          selectedOption === "option1" ? "bg-green-500" : "bg-gray-200"
-        } text-white font-bold py-2 px-4 rounded-l focus:outline-none`}
-        onClick={handleToggleOption}
-      >
-        Opção 1
-      </button>
-      <button
-        className={`${
-          selectedOption === "option2" ? "bg-green-500" : "bg-gray-200"
-        } text-white font-bold py-2 px-4 rounded-r focus:outline-none`}
-        onClick={handleToggleOption}
-      >
-        Opção 2
-      </button>
-      <div
-        className={`absolute bg-gray-300 w-8 h-8 rounded-full transition-transform duration-300 ${
-          selectedOption === "option1" ? "left-0" : "right-0"
-        }`}
-      />
+    <div className="flex items-center">
+      <div className="flex mx-1">
+        <Icons nameIcon={"Sun"} color={"#626C7F"} size="lg" />
+      </div>
+      <div className="onoffswitch">
+        <input
+          type="checkbox"
+          name="onoffswitch"
+          className="onoffswitch-checkbox"
+          id="myonoffswitch"
+          tabIndex={0}
+          checked={selectedOption === "option2"}
+          onChange={handleToggleOption}
+        />
+        <label className="onoffswitch-label" htmlFor="myonoffswitch"></label>
+      </div>
+      <div className="flex mx-1">
+      <Icons nameIcon={"Moon"} color={"#626C7F"} size="lg" />
+      </div>
     </div>
   );
 };

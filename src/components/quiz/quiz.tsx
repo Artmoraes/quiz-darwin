@@ -142,9 +142,7 @@ const Quiz: React.FC<{ subject: string }> = ({ subject }) => {
     <div className="mt-8">
       {currentQuiz && currentQuiz.questions.length > currentQuestionIndex ? (
         <div className="mt-4">
-          <div className="flex items-center mt-2">
             <Header title={subject} icon={subject} />
-          </div>
           <p className="mt-4">
             {currentQuiz.questions[currentQuestionIndex].question}
           </p>

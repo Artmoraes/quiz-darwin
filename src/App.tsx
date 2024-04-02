@@ -2,6 +2,7 @@ import React from "react";
 import Body from "./components/body/body";
 import Quiz from "./components/quiz/quiz";
 import { Route, Routes } from "react-router-dom";
+import "./index.css";
 
 const App: React.FC = () => {
   return (

@@ -1,0 +1,15 @@
+.header-flex {
+  flex-direction: row;
+  align-items: center;
+}
+
+@media (max-width: 330px) {
+  .header-flex {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.container-icon-header {
+  background-color: #F6E7FF;
+}
