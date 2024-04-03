@@ -28,9 +28,9 @@ const Icons: React.FC<Props> = ({
     Sunny: <img src={sunny} alt="Sunny" />,
   };
 
-  const icon = iconMap[nameIcon] || <FontAwesomeIcon icon={faQuestionCircle}  size={size} color={color} />;
+  const icon = iconMap[nameIcon] || <FontAwesomeIcon icon={faQuestionCircle} size={size} color={color} />;
 
-  return <div style={{ color, fontSize: size }}>{icon}</div>;
+  return <div style={{ color, width: size, height: size }}>{icon}</div>;
 };
 
 export default Icons;

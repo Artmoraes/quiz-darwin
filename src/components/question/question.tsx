@@ -26,10 +26,12 @@ const Question: React.FC<Props> = ({
   radioDisabled,
   inputRefs,
 }) => {
-  const [correctAnswerObject, setCorrectAnswerObject] = useState<CorrectAnswer | null>(null);
+  const [correctAnswerObject, setCorrectAnswerObject] = useState<CorrectAnswer | null>(
+    null
+  );
 
   useEffect(() => {
-    const correctIndex = options.findIndex(option => option === correctAnswer);
+    const correctIndex = options.findIndex((option) => option === correctAnswer);
     if (correctIndex !== -1) {
       setCorrectAnswerObject({ id: correctIndex, option: correctAnswer });
     }
@@ -42,38 +44,31 @@ const Question: React.FC<Props> = ({
   }, [options, inputRefs]);
 
   return (
-    <ul className="mt-2">
+    <div className="mt-2 flex flex-col">
       {options.map((option, index) => (
-        <li
-          key={index}
-          className="mb-2"
-          id={String(index)}
-          ref={(el) => {
-            if (inputRefs.current) {
-              inputRefs.current[index] = el;
+          <button
+            key={index}
+            onClick={() =>
+              handleOptionSelect(
+                option,
+                index,
+                correctAnswerObject || { id: -1, option: "" }
+              )
             }
-          }}
-        >
-          <label className="inline-flex items-center">
-            <input
-              type="radio"
-              className="form-radio"
-              value={option}
-              checked={option === selectedOption}
-              disabled={radioDisabled}
-              onChange={() =>
-                handleOptionSelect(
-                  option,
-                  index,
-                  correctAnswerObject || { id: -1, option: "" }
-                )
-              }
-            />
-            <span className="ml-2">{option}</span>
-          </label>
-        </li>
+            className="group bg-white h-18 mt-4 font-medium py-2 px-4 rounded-2xl focus:outline-none md:mb-0"
+            disabled={radioDisabled}
+          >
+            <div className="flex flex-row items-center">
+              <div className="w-14 h-14 bg-gray-100 rounded-xl group-hover:bg-purple-100">
+                <span className="text-2xl h-full w-full font-medium text-gray-500 flex justify-center items-center">
+                  {String.fromCharCode(65 + index)}
+                </span>
+              </div>
+              <h1 className="text-2xl ml-6">{option}</h1>
+            </div>
+          </button>
       ))}
-    </ul>
+    </div>
   );
 };
 

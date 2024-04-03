@@ -10,7 +10,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ title = "", icon = "" }) => {
   return (
-    <header className="py-1 px-6 bg-slate-200 w-full mt-8 h-14">
+    <header className="py-1 px-6 w-full mt-8 h-14">
       <div
         id="container-icon-button"
         className="header-flex flex justify-between items-center"

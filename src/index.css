@@ -5,3 +5,34 @@
 * {
   font-family: "Rubik";
 }
+
+body {
+  background-color: rgb(241 245 249);
+}
+
+.btn {
+  border-radius: 24px;
+}
+
+.bg-purple-400 {
+  background-color: rgb(192 132 252);
+}
+
+.ht-18 {
+  height: 64px;
+}
+
+@media (max-width: 639px) {
+  .div-btns {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 16px;
+  }
+  .div-title {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 16px;
+  }
+}
